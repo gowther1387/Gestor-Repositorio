@@ -1,5 +1,7 @@
 package br.ufpb.dcx.dsc.repositorios.services;
 
+import br.ufpb.dcx.dsc.repositorios.dto.RepositorioDTO;
+import br.ufpb.dcx.dsc.repositorios.exception.NotFoundException;
 import br.ufpb.dcx.dsc.repositorios.models.Organizacao;
 import br.ufpb.dcx.dsc.repositorios.models.Repositorio;
 import br.ufpb.dcx.dsc.repositorios.repository.OrganizacaoRepository;
@@ -35,7 +37,16 @@ public class RepositorioService {
 
     }
 
+    public Repositorio buscarPorId(Long id) {
+        var entity = repositorioRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Repositório " + id + " não encontrado")); // ← LANÇAR AQUI
+        return entity;
+    }
+
     public void deleteRepositorio(Long id) {
+        if (!repositorioRepository.existsById(id)) {
+            throw new NotFoundException("Repositório " + id + " não encontrado"); // ← LANÇAR AQUI
+        }
         repositorioRepository.deleteById(id);
     }
 
